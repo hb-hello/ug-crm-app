@@ -1,5 +1,5 @@
 // Import Firestore Timestamp type
-import { Timestamp } from 'firebase/firestore';
+import { Timestamp } from 'firebase-admin/firestore';
 
 // ========== STUDENTS COLLECTION ==========
 export interface Student {
