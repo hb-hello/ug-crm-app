@@ -1,6 +1,7 @@
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ToastContainer } from 'react-toastify';
+import ToastManager from './components/common/ToastManager';
+import Login from './pages/Login';
 import './App.css'
 
 const queryClient = new QueryClient();
@@ -9,10 +10,11 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <BrowserRouter>
-        <div className="min-h-screen bg-gray-50">
-          <h1 className="text-3xl font-bold text-center p-8">CRM Frontend</h1>
-        </div>
-        <ToastContainer position="top-right" autoClose={3000} />
+        <Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes>
+        {/* <ToastContainer position="top-right" autoClose={3000} /> */}
+        <ToastManager />
       </BrowserRouter>
     </QueryClientProvider>
   );
