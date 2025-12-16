@@ -1,18 +1,20 @@
-import admin from 'firebase-admin';
 import { config } from '../config/env';
+import admin from 'firebase-admin';
+import * as path from 'path';
 
 let firebaseApp: admin.app.App;
 
 export const initializeFirebase = () => {
   if (!firebaseApp) {
+    const serviceAccountPath = path.join(
+      __dirname,
+      config.firebase.configPath || '../config/keys/serviceAccountKey.json'
+    );
+
     firebaseApp = admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: config.firebase.projectId,
-        clientEmail: config.firebase.clientEmail,
-        privateKey: config.firebase.privateKey,
-      }),
+      credential: admin.credential.cert(serviceAccountPath),
     });
-    console.log('✅ Firebase Admin initialized');
+    console.log('Firebase Admin initialized');
   }
   return firebaseApp;
 };

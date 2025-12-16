@@ -12,7 +12,7 @@ export const config = {
   customerIo: {
     apiKey: process.env.CUSTOMER_IO_API_KEY || '',
     siteId: process.env.CUSTOMER_IO_SITE_ID || '',
-  },
+  }
 };
 
 // Validate critical environment variables

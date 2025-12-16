@@ -2,16 +2,24 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { useToastStore } from '../store/useToastStore';
+import { useUserStore } from '../store/userStore';
 import { signInWithGoogle } from '../services/firebase';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const addToast = useToastStore((state) => state.addToast);
+  const setUser = useUserStore((state) => state.setUser);
 
   const handleLogin = async () => {
     try {
-      await signInWithGoogle();
-      navigate('/students');
+      const user = await signInWithGoogle();
+      if (user) {
+        setUser(user);
+        // Wait a bit to ensure auth.currentUser is set
+        await new Promise(resolve => setTimeout(resolve, 500));
+        addToast('success', 'Login successful!');
+        navigate('/students');
+      }
     } catch (error) {
       addToast('error', 'Login failed. Please try again.');
       console.error('Login error:', error);

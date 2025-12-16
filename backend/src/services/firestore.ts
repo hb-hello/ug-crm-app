@@ -7,9 +7,8 @@ import type {
   Communication,
   Note,
   Task,
-  GlobalConfig,
-  EmailTemplate,
 } from '../types/firestore.types';
+import type { GlobalConfig, EmailTemplate } from 'crm-shared';
 
 // Initialize Firebase Admin SDK
 let firebaseApp: admin.app.App;

@@ -1,0 +1,36 @@
+{
+  "name": "crm-app",
+  "version": "1.0.0",
+  "description": "CRM Application - for managing student relationships",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend",
+    "shared"
+  ],
+  "scripts": {
+    "install:all": "npm install",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:shared": "npm run build --workspace=shared",
+    "build": "npm run build:shared && npm run build:backend && npm run build:frontend",
+    "clean": "npm run clean --workspaces --if-present",
+    "type-check": "npm run type-check --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "keywords": [
+    "crm",
+    "student-management"
+  ],
+  "author": "",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}

@@ -6,6 +6,7 @@ import { requestLogger } from './middlewares/requestLogger';
 
 // Import routes
 import healthRouter from './routes/health.routes';
+import students from './routes/students';
 
 const app: Application = express();
 
@@ -20,6 +21,7 @@ app.use(requestLogger);
 
 // Routes
 app.use('/api/health', healthRouter);
+app.get('/api/students', students);
 
 // Base route
 app.get('/', (_req: Request, res: Response) => {
