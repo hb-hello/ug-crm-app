@@ -1,10 +1,10 @@
 // initConfig.ts
 import { db } from '../src/services/firestore';
-import {
+import type {
     GlobalConfig,
     CommunicationChannel,
     TaskStatus,
-} from '../src/types/firestore.types';
+} from 'crm-shared';
 
 // === 🔧 Seed Data Using Typed Constants ===
 const globalConfigData: GlobalConfig = {
@@ -12,6 +12,7 @@ const globalConfigData: GlobalConfig = {
     communicationTypes: ['email', 'call', 'sms'] as CommunicationChannel[],
     taskStatuses: ['pending', 'in_progress', 'completed', 'overdue'] as TaskStatus[],
     defaultReminderDays: 3,
+    studentStatusSortOrder: ['Prospect', 'Applying', 'Submitted', 'Admitted', 'Rejected', 'Enrolled'],
 };
 
 async function initGlobalConfig() {

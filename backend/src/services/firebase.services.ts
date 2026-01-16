@@ -19,12 +19,12 @@ export const initializeFirebase = () => {
   return firebaseApp;
 };
 
-export const getFirebaseAuth = () => {
-  if (!firebaseApp) {
-    initializeFirebase();
-  }
-  return admin.auth();
-};
+// export const getFirebaseAuth = () => {
+//   if (!firebaseApp) {
+//     initializeFirebase();
+//   }
+//   return admin.auth();
+// };
 
 export const getFirestore = () => {
   if (!firebaseApp) {

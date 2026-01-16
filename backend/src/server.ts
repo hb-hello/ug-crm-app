@@ -1,12 +1,9 @@
 import app from './app';
 import { config, validateEnv } from './config/env';
-import { initializeFirebase } from './services/firestore';
 
 // Validate environment variables
 validateEnv();
 
-// Initialize Firebase
-initializeFirebase();
 
 const PORT = config.port;
 

@@ -7,6 +7,10 @@ import { requestLogger } from './middlewares/requestLogger';
 // Import routes
 import healthRouter from './routes/health.routes';
 import students from './routes/students';
+import tasksRouter from './routes/tasks';
+import communicationsRouter from './routes/communications';
+import interactionsRouter from './routes/interactions';
+import notesRouter from './routes/notes';
 
 const app: Application = express();
 
@@ -21,7 +25,11 @@ app.use(requestLogger);
 
 // Routes
 app.use('/api/health', healthRouter);
-app.get('/api/students', students);
+app.use('/api/students', students);
+app.use('/api/tasks', tasksRouter);
+app.use('/api/communications', communicationsRouter);
+app.use('/api/interactions', interactionsRouter);
+app.use('/api/notes', notesRouter);
 
 // Base route
 app.get('/', (_req: Request, res: Response) => {

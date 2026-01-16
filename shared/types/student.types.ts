@@ -2,15 +2,16 @@
 // We use string (ISO 8601) as the transfer format between them
 
 export type ApplicationStatus =
-  | 'prospect'
-  | 'applying'
-  | 'submitted'
-  | 'admitted'
-  | 'rejected'
-  | 'enrolled';
+  | 'Prospect'
+  | 'Applying'
+  | 'Submitted'
+  | 'Admitted'
+  | 'Rejected'
+  | 'Enrolled';
 
 export interface Student {
   id: string;
+  studentId: string;
   name: string;
   email: string;
   phone: string;

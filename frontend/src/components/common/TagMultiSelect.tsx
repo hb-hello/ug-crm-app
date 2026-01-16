@@ -10,30 +10,27 @@ import {
     createListCollection,
 } from '@chakra-ui/react';
 
-const tagOptions = [
-    { label: 'High Intent', value: 'High Intent' },
-    { label: 'Unresponsive', value: 'Unresponsive' },
-    { label: 'Cold Lead', value: 'Cold Lead' },
-];
-
-const tagCollection = createListCollection({
-    items: tagOptions,
-});
-
 interface TagMultiSelectProps {
     value: string[];
     onChange: (val: string[]) => void;
+    options?: string[];
 }
 
 export const TagMultiSelect: React.FC<TagMultiSelectProps> = ({
     value,
     onChange,
+    options = [],
 }) => {
+    const tagCollection = createListCollection({
+        items: options.map((tag) => ({ label: tag, value: tag })),
+    });
+
     return (
         <Box width="320px">
             <Select.Root
                 multiple
                 collection={tagCollection}
+                disabled={options.length === 0}
                 value={value}
                 onValueChange={(details) => {
                     onChange(details.value);

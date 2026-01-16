@@ -6,6 +6,7 @@ export interface GlobalConfig {
   communicationTypes: CommunicationChannel[];
   taskStatuses: TaskStatus[];
   defaultReminderDays: number;
+  studentStatusSortOrder: string[]; // e.g. ['applying', 'submitted', 'admitted', 'rejected', 'enrolled']
 }
 
 export type EmailTemplateType =

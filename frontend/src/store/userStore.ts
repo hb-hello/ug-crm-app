@@ -14,16 +14,18 @@ interface UserState {
 export const useUserStore = create<UserState>((set) => ({
   currentUser: null,
   userRole: 'admin',
-  loading: false,
+  loading: true,
 
   setUser: (user) => set(() => ({
     currentUser: user,
-    userRole: 'admin', // userRole fixed to admin for now
+    userRole: 'admin',
+    loading: false,
   })),
 
   clearUser: () => set(() => ({
     currentUser: null,
     userRole: 'admin',
+    loading: false,
   })),
 
   signOut: async () => {
