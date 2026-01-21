@@ -1,10 +1,7 @@
 import { Box, Heading, VStack, Text, HStack, Icon, Circle } from '@chakra-ui/react';
 import { Communication } from 'crm-shared';
 import { FiPhone, FiMail, FiMessageSquare } from 'react-icons/fi';
-
-interface CommunicationsTimelineProps {
-    communications: Communication[];
-}
+import { AddCommunicationDialog } from './AddCommunicationDialog';
 
 const CHANNEL_ICONS = {
     call: FiPhone,
@@ -18,10 +15,18 @@ const CHANNEL_COLORS = {
     sms: 'purple',
 };
 
-export function CommunicationsTimeline({ communications }: CommunicationsTimelineProps) {
+interface CommunicationsTimelineProps {
+    communications: Communication[];
+    studentId?: string;
+}
+
+export function CommunicationsTimeline({ communications, studentId }: CommunicationsTimelineProps) {
     return (
         <Box bg="white" shadow="sm" rounded="lg" p={6} h="full">
-            <Heading size="md" mb={4}>Communications</Heading>
+            <HStack justify="space-between" mb={4}>
+                <Heading size="md">Communications</Heading>
+                <AddCommunicationDialog studentId={studentId} />
+            </HStack>
             <VStack align="stretch" gap={6} position="relative" pl={2}>
                 {/* Vertical Line */}
                 <Box
@@ -40,12 +45,12 @@ export function CommunicationsTimeline({ communications }: CommunicationsTimelin
                             <Icon as={CHANNEL_ICONS[comm.channel]} size="sm" />
                         </Circle>
                         <Box flex={1} bg="white" p={3} rounded="md" shadow="xs" border="1px solid" borderColor="gray.100">
-                            <Text fontSize="sm" fontWeight="medium" mb={1}>
+                            <Text fontSize="sm" fontWeight="medium" mb={1} textAlign="left">
                                 {comm.summary}
                             </Text>
                             <HStack justify="space-between" fontSize="xs" color="gray.500">
                                 <Text>By: {comm.loggedBy}</Text>
-                                <Text>{new Date(comm.timestamp).toLocaleString()}</Text>
+                                <Text>{new Date(comm.timestamp).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</Text>
                             </HStack>
                         </Box>
                     </HStack>

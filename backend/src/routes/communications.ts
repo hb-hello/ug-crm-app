@@ -1,8 +1,11 @@
 import express, { Request, Response } from 'express';
 import { authMiddleware } from '../middlewares/authMiddleware';
 import { db } from '../services/firestore';
+import { CommunicationChannel } from 'crm-shared';
 
 const router = express.Router();
+
+const VALID_CHANNELS: CommunicationChannel[] = ['call', 'email', 'sms'];
 
 /**
  * GET /api/communications
@@ -36,4 +39,42 @@ router.get('/', authMiddleware, async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * POST /api/communications
+ * Create a new communication
+ */
+router.post('/', authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const { studentId, channel, summary, timestamp, loggedBy } = req.body;
+
+        if (!studentId || !channel || !summary || !timestamp || !loggedBy) {
+            return res.status(400).json({ message: 'studentId, channel, summary, timestamp, and loggedBy are required' });
+        }
+
+        if (!VALID_CHANNELS.includes(channel)) {
+            return res.status(400).json({ message: 'Invalid channel. Must be one of: call, email, sms' });
+        }
+
+        const newCommunication = {
+            studentId,
+            channel,
+            summary,
+            timestamp: new Date(timestamp),
+            loggedBy,
+        };
+
+        const docRef = await db.collection('communications').add(newCommunication);
+
+        return res.status(201).json({
+            id: docRef.id,
+            ...newCommunication,
+            timestamp: new Date(timestamp).toISOString(),
+        });
+    } catch (error) {
+        console.error('Failed to create communication:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 export default router;
+

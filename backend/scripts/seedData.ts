@@ -58,9 +58,11 @@ function generateRandomStudent(): Omit<Student, 'id'> {
     const firstName = faker.person.firstName();
     const lastName = faker.person.lastName();
     const createdAt = Timestamp.fromDate(faker.date.past({ years: 1 }));
+    const applying = faker.helpers.arrayElements(['Harvard', 'Stanford', 'MIT', 'Yale', 'Princeton'], { min: 0, max: 3 });
+
 
     return {
-        studentId: `UG-${faker.number.int({ min: 100000, max: 999999 })}`,
+        studentId: `S-${faker.number.int({ min: 100000, max: 999999 })}`,
         name: `${firstName} ${lastName}`,
         email: faker.internet.email({ firstName, lastName }),
         phone: faker.phone.number(),
@@ -69,9 +71,9 @@ function generateRandomStudent(): Omit<Student, 'id'> {
         applicationStatus: faker.helpers.arrayElement(['Prospect', 'Applying', 'Submitted', 'Admitted', 'Enrolled', 'Rejected']),
         lastActive: Timestamp.fromDate(faker.date.recent()),
         createdAt: createdAt,
-        tags: faker.helpers.arrayElements(['Interested', 'Athlete', 'Scholarship', 'International', 'Local'], { min: 0, max: 3 }),
-        applyingColleges: faker.helpers.arrayElements(['Harvard', 'Stanford', 'MIT', 'Yale', 'Princeton'], { min: 0, max: 3 }),
-        submittedColleges: [], // Can be populated if needed, leaving empty for now based on exploration
+        tags: faker.helpers.arrayElements(['Interested', 'Athlete', 'Scholarship', 'International'], { min: 0, max: 3 }),
+        applyingColleges: applying,
+        submittedColleges: faker.helpers.arrayElements(['Harvard', 'Stanford', 'MIT', 'Yale', 'Princeton'], { min: 0, max: applying.length }),
         countCommunications: 0, // Will update after generation
         countPendingTasks: 0, // Will update after generation
     };
@@ -81,7 +83,8 @@ function generateRandomStudent(): Omit<Student, 'id'> {
 function generateInteractions(studentDocId: string, count: number): Omit<Interaction, 'id'>[] {
     return Array.from({ length: count }, () => ({
         studentId: studentDocId,
-        type: faker.helpers.arrayElement(['login', 'AI question', 'document']),
+        type: faker.helpers.arrayElement(['login', 'AI question', 'document upload', 'document download']),
+        description: faker.system.fileName(),
         timestamp: Timestamp.fromDate(faker.date.recent()),
         metadata: {
             device: faker.helpers.arrayElement(['mobile', 'desktop', 'tablet']),

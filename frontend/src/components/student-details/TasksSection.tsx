@@ -1,9 +1,12 @@
-import { Box, Heading, VStack, Card, Text, Badge, HStack, Button } from '@chakra-ui/react';
+import { Box, Heading, VStack, Card, Text, Badge, HStack, Button, Menu } from '@chakra-ui/react';
 import { Task } from 'crm-shared';
 import { FiClock, FiEdit2 } from 'react-icons/fi';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { api } from '@/services/api';
 
 interface TasksSectionProps {
     tasks: Task[];
+    studentId?: string; // Optional for invalidation scoping, but we can invalidate generic 'tasks'
 }
 
 const STATUS_COLORS: Record<string, string> = {
@@ -13,7 +16,27 @@ const STATUS_COLORS: Record<string, string> = {
     overdue: 'red',
 };
 
+const STATUS_OPTIONS = [
+    { value: 'pending', label: 'Pending' },
+    { value: 'in_progress', label: 'In Progress' },
+    { value: 'completed', label: 'Completed' },
+    // overdue is usually automatic, but allowing manual set
+    { value: 'overdue', label: 'Overdue' },
+];
+
 export function TasksSection({ tasks }: TasksSectionProps) {
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: async ({ taskId, status }: { taskId: string; status: string }) => {
+            return api.patch(`/tasks/${taskId}`, { status });
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['tasks'] });
+            // Also invalidate student stats if needed?
+        },
+    });
+
     return (
         <Box bg="white" shadow="sm" rounded="lg" p={6}>
             <Heading size="md" mb={4}>Tasks</Heading>
@@ -39,9 +62,25 @@ export function TasksSection({ tasks }: TasksSectionProps) {
                                         <Badge colorPalette={STATUS_COLORS[task.status]}>
                                             {task.status.replace('_', ' ')}
                                         </Badge>
-                                        <Button size="xs" variant="ghost">
-                                            <FiEdit2 />
-                                        </Button>
+
+                                        <Menu.Root>
+                                            <Menu.Trigger asChild>
+                                                <Button size="xs" variant="ghost" loading={mutation.isPending}>
+                                                    <FiEdit2 />
+                                                </Button>
+                                            </Menu.Trigger>
+                                            <Menu.Content>
+                                                {STATUS_OPTIONS.map(option => (
+                                                    <Menu.Item
+                                                        key={option.value}
+                                                        value={option.value}
+                                                        onClick={() => mutation.mutate({ taskId: task.id, status: option.value })}
+                                                    >
+                                                        {option.label}
+                                                    </Menu.Item>
+                                                ))}
+                                            </Menu.Content>
+                                        </Menu.Root>
                                     </HStack>
                                 </HStack>
                             </Card.Body>

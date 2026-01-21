@@ -77,9 +77,8 @@ export default function Students() {
 
     const handleNext = () => {
         if (searchData?.pagination.nextCursor) {
-            if (cursor) {
-                setPrevCursors((prev) => [...prev, cursor]);
-            }
+            // Always push current cursor (empty string for first page) to enable going back
+            setPrevCursors((prev) => [...prev, cursor ?? '']);
             setCursor(searchData.pagination.nextCursor);
         }
     };
@@ -88,7 +87,8 @@ export default function Students() {
         const newPrevCursors = [...prevCursors];
         const prevCursor = newPrevCursors.pop();
         setPrevCursors(newPrevCursors);
-        setCursor(prevCursor);
+        // Empty string means first page, convert back to undefined
+        setCursor(prevCursor === '' ? undefined : prevCursor);
     };
 
     const handleRowClick = (studentId: string) => {

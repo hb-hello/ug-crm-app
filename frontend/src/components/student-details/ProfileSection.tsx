@@ -23,7 +23,7 @@ export function ProfileSection({ student }: ProfileSectionProps) {
             <HStack justify="space-between" mb={6} align="start">
                 <Box>
                     <Heading size="xl" mb={1}>{student.name}</Heading>
-                    <Text color="gray.500" fontSize="sm">ID: {student.studentId}</Text>
+                    <Text color="gray.500" fontSize="sm" textAlign="left">ID: {student.studentId}</Text>
                 </Box>
                 <Badge colorPalette={statusColor} size="lg" variant="solid">
                     {student.applicationStatus}
@@ -66,7 +66,7 @@ export function ProfileSection({ student }: ProfileSectionProps) {
                 </HStack>
 
                 <HStack align="start" gridColumn={{ md: "span 2" }}>
-                    <HStack color="gray.500" w="32" mt={1}>
+                    <HStack color="gray.500" w="32">
                         <Icon as={FiTag} />
                         <Text fontSize="sm">Tags</Text>
                     </HStack>

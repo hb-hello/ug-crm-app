@@ -25,8 +25,6 @@ export default function StudentDetails() {
     });
 
     // 2. Fetch Related Data (only if student is loaded)
-    // We use student.studentId (custom ID) or student.id (doc ID)? 
-    // Usually FKs use Doc ID. Let's assume Doc ID for now.
     const studentDocId = student?.id;
 
     const { data: tasks = [] } = useQuery({
@@ -78,7 +76,7 @@ export default function StudentDetails() {
             <Center h="50vh" flexDirection="column" gap={4}>
                 <Heading size="md" color="red.500">Student not found</Heading>
                 <Button variant="outline" onClick={() => navigate('/students')}>
-                    Back to Directory
+                    Back to Students
                 </Button>
             </Center>
         );
@@ -107,7 +105,7 @@ export default function StudentDetails() {
 
                 {/* Split Section: Communications (Left) and Activity (Right) */}
                 <GridItem colSpan={{ base: 12, lg: 8 }}>
-                    <CommunicationsTimeline communications={communications} />
+                    <CommunicationsTimeline communications={communications} studentId={studentDocId} />
                 </GridItem>
 
                 <GridItem colSpan={{ base: 12, lg: 4 }}>
@@ -116,7 +114,7 @@ export default function StudentDetails() {
 
                 {/* Notes Section - Full Width */}
                 <GridItem colSpan={12}>
-                    <NotesSection notes={notes} />
+                    <NotesSection notes={notes} studentId={studentDocId} />
                 </GridItem>
             </Grid>
         </Container>

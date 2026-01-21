@@ -9,4 +9,4 @@ export interface Communication {
   loggedBy: string; // userId or staffId
 }
 
-export type CreateCommunicationDto = Omit<Communication, 'id' | 'timestamp'>;
+export type CreateCommunicationDto = Omit<Communication, 'id'>;
