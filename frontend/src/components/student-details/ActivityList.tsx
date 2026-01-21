@@ -30,7 +30,7 @@ export function ActivityList({ interactions }: ActivityListProps) {
 
     return (
         <Box bg="white" shadow="sm" rounded="lg" p={6} h="full">
-            <Heading size="md" mb={4}>Student Activity</Heading>
+            <Heading size="md" mb={4}>Website Activity</Heading>
             <VStack align="stretch" gap={3}>
                 {interactions.map((interaction) => {
                     const typeConfig = TYPE_CONFIG[interaction.type] || { icon: FiLogIn, color: 'gray' };

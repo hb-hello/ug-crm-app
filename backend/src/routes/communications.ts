@@ -45,10 +45,10 @@ router.get('/', authMiddleware, async (req: Request, res: Response) => {
  */
 router.post('/', authMiddleware, async (req: Request, res: Response) => {
     try {
-        const { studentId, channel, summary, timestamp, loggedBy } = req.body;
+        const { studentId, channel, summary, timestamp } = req.body;
 
-        if (!studentId || !channel || !summary || !timestamp || !loggedBy) {
-            return res.status(400).json({ message: 'studentId, channel, summary, timestamp, and loggedBy are required' });
+        if (!studentId || !channel || !summary || !timestamp) {
+            return res.status(400).json({ message: 'studentId, channel, summary, and timestamp are required' });
         }
 
         if (!VALID_CHANNELS.includes(channel)) {
@@ -60,7 +60,7 @@ router.post('/', authMiddleware, async (req: Request, res: Response) => {
             channel,
             summary,
             timestamp: new Date(timestamp),
-            loggedBy,
+            loggedBy: (req.user as any)?.uid,
         };
 
         const docRef = await db.collection('communications').add(newCommunication);

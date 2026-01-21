@@ -86,4 +86,31 @@ router.get('/me', authMiddleware, async (req: Request, res: Response) => {
     }
 });
 
+// Get all users (lightweight for mapping)
+router.get('/', authMiddleware, async (_req: Request, res: Response) => {
+    try {
+        const snapshot = await collections.users.get();
+        const users = snapshot.docs.map(doc => {
+            const data = doc.data();
+            return {
+                id: doc.id,
+                name: data.name || data.email, // Fallback to email if name missing
+                email: data.email,
+                role: data.role,
+            };
+        });
+
+        return res.json({
+            success: true,
+            data: users,
+        });
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Failed to fetch users',
+        });
+    }
+});
+
 export default router;

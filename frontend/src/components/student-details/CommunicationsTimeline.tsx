@@ -2,6 +2,7 @@ import { Box, Heading, VStack, Text, HStack, Icon, Circle } from '@chakra-ui/rea
 import { Communication } from 'crm-shared';
 import { FiPhone, FiMail, FiMessageSquare } from 'react-icons/fi';
 import { AddCommunicationDialog } from './AddCommunicationDialog';
+import { useUserStore } from '@/store/userStore';
 
 const CHANNEL_ICONS = {
     call: FiPhone,
@@ -21,6 +22,8 @@ interface CommunicationsTimelineProps {
 }
 
 export function CommunicationsTimeline({ communications, studentId }: CommunicationsTimelineProps) {
+    const { usersMap } = useUserStore();
+
     return (
         <Box bg="white" shadow="sm" rounded="lg" p={6} h="full">
             <HStack justify="space-between" mb={4}>
@@ -49,7 +52,7 @@ export function CommunicationsTimeline({ communications, studentId }: Communicat
                                 {comm.summary}
                             </Text>
                             <HStack justify="space-between" fontSize="xs" color="gray.500">
-                                <Text>By: {comm.loggedBy}</Text>
+                                <Text>By: {usersMap[comm.loggedBy] || comm.loggedBy}</Text>
                                 <Text>{new Date(comm.timestamp).toLocaleString(undefined, { dateStyle: 'short', timeStyle: 'short' })}</Text>
                             </HStack>
                         </Box>

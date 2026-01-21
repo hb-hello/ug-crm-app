@@ -11,13 +11,16 @@ interface UserState {
   setUser: (user: User | null) => Promise<void>;
   clearUser: () => void;
   signOut: () => Promise<void>;
-  refreshCrmUser: () => Promise<void>;
+  // Users map for name display
+  usersMap: Record<string, string>;
+  fetchAllUsers: () => Promise<void>;
 }
 
 export const useUserStore = create<UserState>((set, get) => ({
   currentUser: null,
   crmUser: null,
   loading: true,
+  usersMap: {},
 
   setUser: async (user) => {
     set({ currentUser: user, loading: true });
@@ -27,15 +30,15 @@ export const useUserStore = create<UserState>((set, get) => ({
         // Fetch CRM user data
         const response = await api.get<{ data: CrmUser }>('/users/me');
         if (response.data.data) {
-          set({ crmUser: response.data.data, loading: false });
-        } else {
-          console.error('No user data in response');
-          set({ loading: false });
+          set({ crmUser: response.data.data });
         }
+
+        // Also fetch all users map when a user logs in
+        get().fetchAllUsers();
+
+        set({ loading: false });
       } catch (error) {
         console.error('Failed to fetch CRM user:', error);
-        // Don't clear current user, just set loading false
-        // The user is authenticated with Firebase but might not have a CRM profile yet (e.g. during signup)
         set({ loading: false });
       }
     } else {
@@ -47,6 +50,7 @@ export const useUserStore = create<UserState>((set, get) => ({
     currentUser: null,
     crmUser: null,
     loading: false,
+    usersMap: {},
   })),
 
   refreshCrmUser: async () => {
@@ -63,6 +67,21 @@ export const useUserStore = create<UserState>((set, get) => ({
     }
   },
 
+  fetchAllUsers: async () => {
+    try {
+      const response = await api.get<{ data: { id: string; name: string }[] }>('/users');
+      if (response.data.data) {
+        const map: Record<string, string> = {};
+        response.data.data.forEach(u => {
+          map[u.id] = u.name;
+        });
+        set({ usersMap: map });
+      }
+    } catch (error) {
+      console.error('Failed to fetch all users:', error);
+    }
+  },
+
   signOut: async () => {
     set({ loading: true });
     try {
@@ -71,6 +90,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         currentUser: null,
         crmUser: null,
         loading: false,
+        usersMap: {}, // Clear map on sign out
       });
     } catch (error) {
       console.error('Failed to sign out:', error);

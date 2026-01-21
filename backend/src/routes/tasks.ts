@@ -71,4 +71,40 @@ router.patch('/:id', authMiddleware, async (req: Request, res: Response) => {
     }
 });
 
+/**
+ * DELETE /api/tasks/:id
+ * Delete a task
+ */
+router.delete('/:id', authMiddleware, async (req: Request, res: Response) => {
+    try {
+        const { id } = req.params;
+        // @ts-ignore
+        const currentUser = req.user;
+
+        const taskRef = db.collection('tasks').doc(id);
+        const taskDoc = await taskRef.get();
+
+        if (!taskDoc.exists) {
+            return res.status(404).json({ message: 'Task not found' });
+        }
+
+        const taskData = taskDoc.data();
+
+        // Check if current user is the creator or assignee
+        if (taskData?.createdBy !== currentUser?.uid &&
+            taskData?.assignedTo !== currentUser?.uid &&
+            taskData?.createdBy !== currentUser?.user_id &&
+            taskData?.assignedTo !== currentUser?.user_id) {
+            return res.status(403).json({ message: 'Unauthorized to delete this task' });
+        }
+
+        await taskRef.delete();
+
+        return res.json({ id, message: 'Task deleted successfully' });
+    } catch (error) {
+        console.error('Failed to delete task:', error);
+        return res.status(500).json({ message: 'Internal server error' });
+    }
+});
+
 export default router;

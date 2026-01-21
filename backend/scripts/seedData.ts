@@ -154,8 +154,7 @@ async function seedData() {
         const STUDENT_COUNT = 50;
 
         for (let i = 0; i < STUDENT_COUNT; i++) {
-            // Pick a random user for assignment
-            const assigneeId = faker.helpers.arrayElement(users);
+
 
             // Generate student base data
             const studentData = generateRandomStudent();
@@ -183,7 +182,7 @@ async function seedData() {
             }));
             const tasks = generateTasks(studentDocId, taskCount).map(t => ({
                 ...t,
-                assignedTo: assigneeId,
+                assignedTo: faker.helpers.arrayElement(users),
                 createdBy: faker.helpers.arrayElement(users)
             }));
 

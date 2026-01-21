@@ -6,13 +6,16 @@ import {
     Button,
     HStack,
     Container,
+    Menu,
+    Avatar,
 } from '@chakra-ui/react';
+import { FiChevronDown } from 'react-icons/fi';
 import { useUserStore } from '@/store/userStore';
 
 export function Navbar() {
     const navigate = useNavigate();
     const location = useLocation();
-    const signOut = useUserStore((state) => state.signOut);
+    const { signOut, crmUser } = useUserStore();
 
     const isActive = (path: string) => location.pathname.startsWith(path);
 
@@ -63,9 +66,31 @@ export function Navbar() {
                             </Button>
                         </HStack>
 
-                        <Button variant="ghost" color="red.500" onClick={handleLogout} size="sm">
-                            Logout
-                        </Button>
+                        <Menu.Root>
+                            <Menu.Trigger asChild>
+                                <Button variant="ghost" size="sm" gap={2}>
+                                    <Avatar.Root size="xs">
+                                        <Avatar.Fallback name={crmUser?.name || 'U'} />
+                                    </Avatar.Root>
+                                    <Text fontWeight="medium" display={{ base: 'none', md: 'block' }}>
+                                        {crmUser?.name || 'User'}
+                                    </Text>
+                                    <FiChevronDown />
+                                </Button>
+                            </Menu.Trigger>
+                            <Menu.Positioner>
+                                <Menu.Content>
+                                    <Menu.Item value="profile" disabled>
+                                        <Text fontWeight="bold">{crmUser?.name}</Text>
+                                        <Text fontSize="xs" color="gray.500">{crmUser?.role}</Text>
+                                    </Menu.Item>
+                                    <Menu.Separator />
+                                    <Menu.Item value="logout" onClick={handleLogout} color="red.500">
+                                        Logout
+                                    </Menu.Item>
+                                </Menu.Content>
+                            </Menu.Positioner>
+                        </Menu.Root>
                     </HStack>
                 </Flex>
             </Container>
