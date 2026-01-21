@@ -127,6 +127,16 @@ function generateTasks(studentDocId: string, count: number): Omit<Task, 'id'>[] 
     }));
 }
 
+// Fetch users
+async function getUsers() {
+    const snapshot = await db.collection('users').get();
+    if (snapshot.empty) {
+        console.warn('⚠️ No users found. Using generic admin.');
+        return ['admin'];
+    }
+    return snapshot.docs.map(doc => doc.id);
+}
+
 async function seedData() {
     try {
         const batchHandler = new BatchHandler(db);
@@ -135,11 +145,18 @@ async function seedData() {
         await clearCollections(batchHandler);
         console.log('✅ Collections cleared');
 
-        // 2. Generate Students and related data
+        // 2. Get Users
+        const users = await getUsers();
+        console.log(`👥 Found ${users.length} users for assignment`);
+
+        // 3. Generate Students and related data
         console.log('🌱 Seeding students and related data...');
         const STUDENT_COUNT = 50;
 
         for (let i = 0; i < STUDENT_COUNT; i++) {
+            // Pick a random user for assignment
+            const assigneeId = faker.helpers.arrayElement(users);
+
             // Generate student base data
             const studentData = generateRandomStudent();
             const studentRef = db.collection('students').doc();
@@ -156,9 +173,19 @@ async function seedData() {
 
             // Generate related data arrays
             const interactions = generateInteractions(studentDocId, interactionCount);
-            const communications = generateCommunications(studentDocId, communicationCount);
-            const notes = generateNotes(studentDocId, noteCount);
-            const tasks = generateTasks(studentDocId, taskCount);
+            const communications = generateCommunications(studentDocId, communicationCount).map(c => ({
+                ...c,
+                loggedBy: faker.helpers.arrayElement(users)
+            }));
+            const notes = generateNotes(studentDocId, noteCount).map(n => ({
+                ...n,
+                createdBy: faker.helpers.arrayElement(users)
+            }));
+            const tasks = generateTasks(studentDocId, taskCount).map(t => ({
+                ...t,
+                assignedTo: assigneeId,
+                createdBy: faker.helpers.arrayElement(users)
+            }));
 
             // Count pending tasks for student summary
             const pendingTasks = tasks.filter(t => t.status !== 'completed').length;

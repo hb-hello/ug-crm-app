@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import ToastManager from './components/common/ToastManager';
 import Login from './pages/Login';
+import Signup from './pages/Signup';
 import Students from './pages/Students';
 import StudentDetails from './pages/StudentDetails';
 import { onAuthStateChanged } from './services/firebase';
@@ -53,6 +54,7 @@ function App() {
 
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
 
         {/* Protected Routes wrapped in Layout */}
         <Route

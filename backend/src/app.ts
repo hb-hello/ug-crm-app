@@ -11,6 +11,7 @@ import tasksRouter from './routes/tasks';
 import communicationsRouter from './routes/communications';
 import interactionsRouter from './routes/interactions';
 import notesRouter from './routes/notes';
+import usersRouter from './routes/users';
 
 const app: Application = express();
 
@@ -30,6 +31,7 @@ app.use('/api/tasks', tasksRouter);
 app.use('/api/communications', communicationsRouter);
 app.use('/api/interactions', interactionsRouter);
 app.use('/api/notes', notesRouter);
+app.use('/api/users', usersRouter);
 
 // Base route
 app.get('/', (_req: Request, res: Response) => {

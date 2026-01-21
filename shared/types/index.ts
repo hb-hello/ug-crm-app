@@ -24,6 +24,9 @@ export type { TaskStatus } from './task.types';
 export type { GlobalConfig, EmailTemplate, CreateEmailTemplateDto } from './config.types';
 export type { EmailTemplateType } from './config.types';
 
+// User types
+export type { User, CreateUserDto, UserRole } from './user.types';
+
 // API Response types
 export interface ApiResponse<T> {
   success: boolean;

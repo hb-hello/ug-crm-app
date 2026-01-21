@@ -5,6 +5,7 @@ import type {
   Note,
   Task,
 } from '../types/firestore.types';
+import type { User } from '../types/user.types';
 import type { GlobalConfig, EmailTemplate } from 'crm-shared';
 import { getFirestore } from './firebase.services';
 
@@ -46,6 +47,7 @@ export const collections = {
   communications: db.collection('communications') as FirebaseFirestore.CollectionReference<Communication>,
   notes: db.collection('notes') as FirebaseFirestore.CollectionReference<Note>,
   tasks: db.collection('tasks') as FirebaseFirestore.CollectionReference<Task>,
+  users: db.collection('users') as FirebaseFirestore.CollectionReference<User>,
 };
 
 // Export typed document references for config
